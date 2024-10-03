@@ -3,7 +3,7 @@
 import math
 
 # ## Task 0.1
-from typing import Callable, Iterable
+from typing import Callable, Iterable, List
 
 #
 # Implementation of a prelude of elementary functions.
@@ -123,22 +123,6 @@ def relu_back(a: float, b: float):
     return (0 if relu_val == 0 else 1) * b
 
 
-def negList():
-    pass
-
-
-def addLists():
-    pass
-
-
-def sum():
-    pass
-
-
-def prod():
-    pass
-
-
 # ## Task 0.3
 
 # Small practice library of elementary higher-order functions.
@@ -156,3 +140,44 @@ def prod():
 
 
 # TODO: Implement for Task 0.3.
+def map(input: List[float], fn: Callable[[float], float]) -> List[float]:
+    return [fn(el) for el in input]
+
+
+def reduce(
+    input: List[float], fn: Callable[[float, float], float], acc: float = 0
+) -> float:
+    """
+    fn - Callable that takes an accumulator and the next element in the list
+    This assumes fn() takes an accumulator, which is probably accurate
+    """
+
+    for element in input:
+        acc = fn(acc, element)
+    return acc
+
+
+def zipWith(
+    list1: List[float], list2: List[float], fn: Callable[[float, float], float]
+) -> List[float]:
+    """
+    Higher-order function that combines elements from list1 and list2 using fn
+    """
+    assert len(list1) == len(list2)
+    return [fn(list1[i], list2[i]) for i, _ in enumerate(list1)]
+
+
+def negList(list: List[float]):
+    return map(list, neg)
+
+
+def addLists(list1: List[float], list2: List[float]):
+    return zipWith(list1, list2, add)
+
+
+def sum(list: List[float]):
+    return reduce(list, add)
+
+
+def prod(list: List[float]):
+    return reduce(list, mul, 1)
