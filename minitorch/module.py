@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional, Sequence, Tuple
+from typing import Any, Dict, Optional, Sequence, Tuple, List
 
 
 class Module:
@@ -31,13 +31,29 @@ class Module:
 
     def train(self) -> None:
         """Set the mode of this module and all descendent modules to `train`."""
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        self.training = True
+        for _, module in self._modules.items():
+            module.train()
 
     def eval(self) -> None:
         """Set the mode of this module and all descendent modules to `eval`."""
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        self.training = False
+        for _, module in self._modules.items():
+            module.eval()
+
+    def get_named_parameters(self, prefix: str, result: List[Tuple[str, Parameter]]):
+        children: Dict[str, Module] = self._modules
+
+        for name, parameter in self._parameters.items():
+            print(f"name: {name}, parameter: {parameter}")
+            name = prefix + name if prefix else name
+            result.append((name, parameter))
+
+        if not children:
+            return result
+
+        for name, child in children.items():
+            child.get_named_parameters(prefix + name + ".", result)
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """Collect all the parameters of this module and its descendents.
@@ -47,13 +63,16 @@ class Module:
             The name and `Parameter` of each ancestor parameter.
 
         """
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        result = []
+        self.get_named_parameters("", result)
+        print(f"result value: {result}")
+        return result
 
     def parameters(self) -> Sequence[Parameter]:
         """Enumerate over all the parameters of this module and its descendents."""
-        # TODO: Implement for Task 0.4.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        named_params = self.named_parameters()
+        result = [item[1] for item in named_params]
+        return result
 
     def add_parameter(self, k: str, v: Any) -> Parameter:
         """Manually add a parameter. Useful helper for scalar parameters.
