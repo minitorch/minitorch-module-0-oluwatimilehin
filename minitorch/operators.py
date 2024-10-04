@@ -160,24 +160,27 @@ def reduce(
 def zipWith(
     list1: List[float], list2: List[float], fn: Callable[[float, float], float]
 ) -> List[float]:
-    """
-    Higher-order function that combines elements from list1 and list2 using fn
-    """
+    # Higher-order function that combines elements from list1 and list2 using fn
+
     assert len(list1) == len(list2)
     return [fn(list1[i], list2[i]) for i, _ in enumerate(list1)]
 
 
 def negList(list: List[float]):
+    # Negates all elements in `list`` using map
     return map(list, neg)
 
 
 def addLists(list1: List[float], list2: List[float]):
+    # Adds corresponding elements from `list1` and `list2` using zipWith
     return zipWith(list1, list2, add)
 
 
 def sum(list: List[float]):
+    # Sums all elements in `list` using reduce
     return reduce(list, add)
 
 
 def prod(list: List[float]):
+    # Multiplies all elements in `list` using reduce
     return reduce(list, mul, 1)
